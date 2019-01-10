@@ -14,7 +14,7 @@
     <!--link rel="stylesheet" href="beleef.css" /-->
     <link rel="stylesheet" href="admin.css" />
 
-    <title>Beleef</title>
+    <title>Blog</title>
 </head>
 
 <body>
@@ -30,21 +30,21 @@
 					<a href="nieuws.php">Alle berichten</a>
 					<a href="nieuws_add.php">Nieuw bericht</a>
 					<a href="nieuwscategorieen.php">Categorieen</a>
-					<a href="nieuwseditors.php">Editors</a>
 				</div>			
 			</nav>
 			<h3 class="menu-subtitle" style="color: white; margin-left: 5px;">MEDIA</h3>
 			<nav id="site-navigation-products" class="main-navigation">
 				<div class="menu-container">
+					<a href="media.php">Alle bestanden</a>
 					<a href="upload.php">Bestand uploaden</a>
-					<a href="productcategorieen.php">Categorieen</a>
+					<a href="mediacategorieen.php">Categorieen</a>
 				</div>			
 			</nav>
 			<h3 class="menu-subtitle" style="color: white; margin-left: 5px;">GEBRUIKERS</h3>
 			<nav id="site-navigation" class="main-navigation">
 				<div class="menu-container">
-					<a href="nieuws.php">Alle gebruikers</a>
-					<a href="nieuws.php">Nieuwe gebruiker</a>
+					<a href="nieuwseditors.php">Alle gebruikers</a>
+					<a href="nieuwseditors_add.php">Nieuwe gebruiker</a>
 				</div>			
 			</nav>
 		</header>

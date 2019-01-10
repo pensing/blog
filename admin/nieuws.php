@@ -1,5 +1,6 @@
 <?php
 require_once("header.php");
+require_once("functions.php");
 ?>
 
 <header>
@@ -7,25 +8,30 @@ require_once("header.php");
 </header>
 
 <?php
-// Check connection
-/*if (connected()) {
-    echo "Connected successfully";   
-} else { die("Connection failed"); }*/
 
-$servername = "localhost";
-$username = "root";
-$password = "paulus";
-$dbname = "beleef";
+try {
 
-// Create connection
-$conn = mysqli_connect($servername, $username, $password, $dbname);
+    $inlog = inlog();
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-} 
-//echo "Connected successfully";
-
+    $servername = $inlog["servername"];
+    $dbname = $inlog["dbname"];
+    $username = $inlog["username"];
+    $password = $inlog["password"];
+        
+    // Create connection
+    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+        
+    // set the PDO error mode to exception
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    //echo '<span class="melding">Verbinding is gelukt</span><br /><br />';
+    $sql = "SELECT id, title, categorie_id, editor_id, date FROM news";
+    $stmt = $conn->prepare($sql); 
+    $stmt->execute();
+    //$stmt = $conn->query($sql);
+}
+catch(PDOException $e) {
+    echo '<span class="foutmelding">Fout: ' . $e->getMessage() . '</span><br /><br />';
+}
 
 ?>
 
@@ -46,21 +52,12 @@ if ($conn->connect_error) {
 
   <?php
 
-$sql = "SELECT id, title, categorie_id, editor_id, date FROM news";
-$result = $conn->query($sql);
-
-if (mysqli_num_rows($result) > 0) {
-    // output data of each row
-    while($row = mysqli_fetch_assoc($result)) {
-    // output data of each row
-        echo '<tr>';
-        echo '<td>' . $row["id"]. '</td><td>' . $row["title"]. '</td><td>' . $row["categorie_id"]. '</td><td>' . $row["editor_id"]. '</td><td>' . $row["date"]. '</td>';
-        echo '<td><a href="nieuws_upd.php?id=' . $row["id"] . '"><i class="fas fa-pencil-alt" style="color:black; font-size:16px"></i></a></td>';
-        echo '<td><a href="nieuws_del.php?id=' . $row["id"] . '"><i class="fas fa-trash-alt" style="color:black; font-size:16px"></i></a></td>';
-        echo '</tr>';
-    }
-} else {
-    echo "0 results";
+while ($row = $stmt->fetch()) {
+    echo '<tr>';
+    echo '<td>' . $row["id"]. '</td><td>' . $row["title"]. '</td><td>' . $row["categorie_id"]. '</td><td>' . $row["editor_id"]. '</td><td>' . $row["date"]. '</td>';
+    echo '<td><a href="nieuws_upd.php?id=' . $row["id"] . '"><i class="fas fa-pencil-alt" style="color:black; font-size:16px"></i></a></td>';
+    echo '<td><a href="nieuws_del.php?id=' . $row["id"] . '"><i class="fas fa-trash-alt" style="color:black; font-size:16px"></i></a></td>';
+    echo '</tr>';
 }
 
   ?>
@@ -69,9 +66,10 @@ if (mysqli_num_rows($result) > 0) {
 </table>
 </div>
 
+
 <?php
     //echo printFooter();
-    mysqli_close($conn);
+    $conn = null;
 ?>
 
     <div><a class="btn btn-primary" type="button" href="nieuws_add.php" style="margin: 30px 200px;">Toevoegen bericht</a></div>

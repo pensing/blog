@@ -1,5 +1,6 @@
 <?php
 require_once("header.php");
+require_once("functions.php");
 ?>
 
 				<header>
@@ -7,19 +8,9 @@ require_once("header.php");
 				</header>
 
 				<?php
-// Check connection
-/*if (connected()) {
-    echo "Connected successfully";   
-} else { die("Connection failed"); }*/
-
-$servername = "localhost";
-$username = "root";
-$password = "paulus";
-$dbname = "beleef";
 
 // Create connection
-$conn = mysqli_connect($servername, $username, $password, $dbname);
-
+$conn = connect();    
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);

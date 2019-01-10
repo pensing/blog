@@ -1,5 +1,6 @@
 <?php
 require_once("header.php");
+require_once("functions.php");
 ?>
 
 <header>
@@ -12,72 +13,97 @@ require_once("header.php");
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $servername = "localhost";
-    $username = "root";
-    $password = "paulus";
-    $dbname = "beleef";
-    
-    // Create connection
-    $conn = mysqli_connect($servername, $username, $password, $dbname);
-    // Check connection
-    if (!$conn) {
-        die("Connection failed: " . mysqli_connect_error());
-    }
-
     $id = $_POST["id"];
     $title = $_POST["title"];
     $categorie_id = $_POST["categorie_id"];
     $editor_id = $_POST["editor_id"];
     $tekst = $_POST["tekst"];
     $image = $_POST["image"];
-    //title, categorie_id, editor_id, tekst, image
-    $sql = "UPDATE news SET title= '$title', categorie_id='$categorie_id', editor_id='$editor_id', tekst='$tekst', image='$image' WHERE id=$id";
-   
-    if (mysqli_query($conn, $sql)) {
-        echo '<span class="melding">Bericht met succes geupdate.</span><br /><br />';
-    } else {
-        echo '<span class="foutmelding">Fout: ' . $sql . "<br>" . mysqli_error($conn) . '</span><br /><br />';
-        //echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+
+
+    try {
+        //$conn = connectpdo();
+    
+        $inlog = inlog();
+    
+        //$servername = "localhost";
+        //$username = "root";
+        //$password = "paulus";
+        //$dbname = "blog";
+        $servername = $inlog["servername"];
+        $dbname = $inlog["dbname"];
+        $username = $inlog["username"];
+        $password = $inlog["password"];
+            
+        // Create connection
+        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+            
+        // set the PDO error mode to exception
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        //echo "Connected successfully";
+
+        //title, categorie_id, editor_id, tekst, image
+        $sql = "UPDATE news SET title= '$title', categorie_id='$categorie_id', editor_id='$editor_id', tekst='$tekst', image='$image' WHERE id=$id";
+
+        // Prepare statement
+       $stmt = $conn->prepare($sql);
+
+       // execute the query
+       $stmt->execute();
+       echo '<span class="melding">Bericht met succes gewijzigd.</span><br /><br />';
+
+        // echo a message to say the UPDATE succeeded
+        //echo $stmt->rowCount() . " records UPDATED successfully";
     }
-    
-    mysqli_close($conn);
-    
+
+
+    catch(PDOException $e) {
+        //echo "Error: " . $e->getMessage();
+        echo '<span class="foutmelding">Fout: ' . $e->getMessage() . '</span><br /><br />';
+    }
+    $conn = null;
+   
 
 } else {
     $id = $_GET["id"];
 
-    $servername = "localhost";
-    $username = "root";
-    $password = "paulus";
-    $dbname = "beleef";
+    try {
     
-    // Create connection
-    $conn = mysqli_connect($servername, $username, $password, $dbname);
-    // Check connection
-    if (!$conn) {
-        die("Connection failed: " . mysqli_connect_error());
-    }
+        $inlog = inlog();   
+    
+        $servername = $inlog["servername"];
+        $dbname = $inlog["dbname"];
+        $username = $inlog["username"];
+        $password = $inlog["password"];
+            
+        // Create connection
+        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+            
+        // set the PDO error mode to exception
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        //echo "Connected successfully";
 
 
     $sql = 'SELECT  id, title, categorie_id, editor_id, tekst, image FROM news WHERE id=' . $id;
-    $result = $conn->query($sql);
-   
-    if (mysqli_num_rows($result) > 0) {
-        // output data of each row
-        while($row = mysqli_fetch_assoc($result)) {
-        // get data of row to update
-        $id = $row["id"];
-        $title = $row["title"];
-        $categorie_id = $row["categorie_id"];
-        $editor_id = $row["editor_id"];
-        $tekst = $row["tekst"];
-        $image = $row["image"];
-        }
-    } else {
-        echo "Row niet gevonden.";
+
+    $stmt = $conn->query($sql);
+
+    $row = $stmt->fetch();
+    // get data of row to update
+    $id = $row["id"];
+    $title = $row["title"];
+    $categorie_id = $row["categorie_id"];
+    $editor_id = $row["editor_id"];
+    $tekst = $row["tekst"];
+    $image = $row["image"];
+    
     }
 
-    mysqli_close($conn);
+    catch(PDOException $e) {
+        //echo '<span class="foutmelding">Fout: ' . $sql . "<br>" . mysqli_error($conn) . '</span><br /><br />';
+        echo '<span class="foutmelding">Fout: ' . $e->getMessage() . '</span><br /><br />';
+    }
+    $conn = null;
 
 }
 ?>
@@ -104,4 +130,4 @@ Plaatje:
 
 <?php
 require_once("footer.php");
- ?>
+?>

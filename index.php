@@ -14,7 +14,7 @@
     <!--link rel="stylesheet" href="beleef.css" /-->
     <link rel="stylesheet" href="admin/admin.css" />
 
-    <title>Beleef</title>
+    <title>Blog</title>
 </head>
 
 <body>
@@ -48,7 +48,7 @@ if ($conn->connect_error) {
 
 <?php
 
-$sql = "SELECT id, title, tekst FROM news";
+$sql = "SELECT id, title, tekst, date FROM news";
 $result = $conn->query($sql);
 
 if (mysqli_num_rows($result) > 0) {
@@ -62,7 +62,7 @@ if (mysqli_num_rows($result) > 0) {
     <div class="card-body">
     <h5 class="card-title">'.$row["title"].'</h5>
     <p class="card-text">'.$row["tekst"].'</p>
-    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+    <p class="card-text">'.$row["date"].'</p>
     </div>
     </div>';
 
