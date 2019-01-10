@@ -1,0 +1,10 @@
+create table news (id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY, title VARCHAR(255), editor_id INT(10), text TEXT, image LONGBLOB NOT NULL);
+
+create table news_categories (id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY, title VARCHAR(255), image LONGBLOB NOT NULL);
+
+create table news_editors (id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), profile_image LONGBLOB NOT NULL);
+
+
+
+insert into news_editors (naam ) values ('Piet');
+
