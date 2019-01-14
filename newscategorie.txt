@@ -1,0 +1,9 @@
+CREATE TABLE `news_categories` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) 
+
+alter table news_categories add FOREIGN KEY (id) REFERENCES news(categorie_id);

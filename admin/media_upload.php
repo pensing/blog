@@ -30,7 +30,6 @@ if(isset($_POST["submit"])) {
         $foutmelding =  "Het bestand is geen image. ";
         $uploadOk = 0;
     }
-}
 
 // Check if file already exists
 if (file_exists($target_file)) {
@@ -65,12 +64,13 @@ if ($uploadOk == 0) {
         $foutmelding = $foutmelding . "Sorry, het uploaden is fout gegaan.";
     }
 }
+}
 
 ?>
 
 
     <div class="table-container">
-    <form action="upload.php" method="post" enctype="multipart/form-data">
+    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" enctype="multipart/form-data">
     
     <?php
     if ($melding <> "") {

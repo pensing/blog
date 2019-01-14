@@ -1,3 +1,22 @@
+<?php
+
+// Start Session
+session_start();
+
+// check user login
+if(empty($_SESSION['user_id']))
+{
+    header("Location: ../index.php");
+}
+
+require_once("functions.php");
+require_once("database.php");
+
+//get user display_name
+$_SESSION["user_display"] = userDisplay($_SESSION['user_id']);
+
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,6 +31,9 @@
     <!-- Extra CSS -->
     <link rel="stylesheet" href="admin.css" />
 
+	<script src="https://cloud.tinymce.com/stable/tinymce.min.js"></script>
+	<script>tinymce.init({ selector:'textarea' });</script>
+
     <title>Blog</title>
 </head>
 
@@ -20,10 +42,15 @@
 
 	<aside id="site-sidebar" class="sidebar" style="background-color: #004eb5;">
 		<header class="site-header" style="background-color: #004eb5;">
-			<div class="site-branding">
-			</div>
+		<h3 class="menu-subtitle" style="color: white; margin-left: 5px;"><?php echo $_SESSION["user_display"]; ?></h3>
+			<nav id="" class="main-navigation">
+				<div class="menu-container">
+					<a href="logout.php">Uitloggen</a>
+					<a href="profile.php">Profiel</a>
+				</div>			
+			</nav>
 			<h3 class="menu-subtitle" style="color: white; margin-left: 5px;">BERICHTEN</h3>
-			<nav id="site-navigation" class="main-navigation">
+			<nav id="" class="main-navigation">
 				<div class="menu-container">
 					<a href="nieuws.php">Alle berichten</a>
 					<a href="nieuws_add.php">Nieuw bericht</a>
@@ -31,20 +58,24 @@
 				</div>			
 			</nav>
 			<h3 class="menu-subtitle" style="color: white; margin-left: 5px;">MEDIA</h3>
-			<nav id="site-navigation-products" class="main-navigation">
+			<nav id="" class="main-navigation">
 				<div class="menu-container">
 					<a href="media.php">Alle bestanden</a>
-					<a href="upload.php">Bestand uploaden</a>
-					<a href="mediacategorieen.php">Categorieen</a>
+					<a href="media_upload.php">Bestand uploaden</a>
+					<!--a href="mediacategorieen.php">Categorieen</a-->
 				</div>			
 			</nav>
+			<?php
+			if (($_SESSION['user_id']==1) AND true) {
+			echo '
 			<h3 class="menu-subtitle" style="color: white; margin-left: 5px;">GEBRUIKERS</h3>
 			<nav id="site-navigation" class="main-navigation">
 				<div class="menu-container">
-					<a href="nieuwseditors.php">Alle gebruikers</a>
-					<a href="nieuwseditors_add.php">Nieuwe gebruiker</a>
+					<a href="users.php">Alle gebruikers</a>
+					<a href="users_add.php">Nieuwe gebruiker</a>
 				</div>			
-			</nav>
+			</nav>';}
+			?>
 		</header>
 
 	</aside>

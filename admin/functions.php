@@ -1,14 +1,5 @@
 <?php
 
-function inlog() {
-    //$inlog = ("servername"=>"localhost", "username"=>"root", "password"=>"paulus", "dbname"=>"blog");
-    $inlog['servername'] = "localhost";
-    $inlog['username'] = "root";
-    $inlog['password'] = "paulus";
-    $inlog['dbname'] = "blog";
-    return $inlog;
-}
-
 function connect() {
     $servername = "localhost";
     $username = "root";
@@ -47,4 +38,5 @@ function connect_pdo() {
     
     }
             
+
 ?>

@@ -1,6 +1,5 @@
 <?php
 require_once("header.php");
-require_once("functions.php");
 ?>
 
 <header>
@@ -10,27 +9,21 @@ require_once("functions.php");
 <?php
 
 try {
-
-    $inlog = inlog();
-
-    $servername = $inlog["servername"];
-    $dbname = $inlog["dbname"];
-    $username = $inlog["username"];
-    $password = $inlog["password"];
-        
     // Create connection
-    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-        
+    $conn = DB();
     // set the PDO error mode to exception
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     //echo '<span class="melding">Verbinding is gelukt</span><br /><br />';
-    $sql = "SELECT id, title, categorie_id, editor_id, date FROM news";
-    $stmt = $conn->prepare($sql); 
-    $stmt->execute();
-    //$stmt = $conn->query($sql);
+    //$sql = "SELECT id, title, categorie_id, editor_id, date FROM news";
+    $sql = "SELECT a.id, a.title, b.name as cat, c.name, a.create_date FROM news a 
+    JOIN news_categories b ON a.categorie_id=b.id INNER JOIN news_editors c ON a.editor_id=c.id
+    ORDER BY a.id";
+    //$stmt = $conn->prepare($sql); 
+    //$stmt->execute();
+    $stmt = $conn->query($sql);
 }
 catch(PDOException $e) {
-    echo '<span class="foutmelding">Fout: ' . $e->getMessage() . '</span><br /><br />';
+    echo foutMelding($e->getMessage());
 }
 
 ?>
@@ -40,7 +33,7 @@ catch(PDOException $e) {
   <thead>
     <tr>
       <th scope="col">#</th>
-      <th scope="col">Title</th>
+      <th scope="col">Titel</th>
       <th scope="col">Categorie</th>
       <th scope="col">Editor</th>
       <th scope="col">Datum</th>
@@ -54,7 +47,7 @@ catch(PDOException $e) {
 
 while ($row = $stmt->fetch()) {
     echo '<tr>';
-    echo '<td>' . $row["id"]. '</td><td>' . $row["title"]. '</td><td>' . $row["categorie_id"]. '</td><td>' . $row["editor_id"]. '</td><td>' . $row["date"]. '</td>';
+    echo '<td>' . $row["id"]. '</td><td>' . $row["title"]. '</td><td>' . $row["cat"]. '</td><td>' . $row["name"]. '</td><td>' . $row["create_date"]. '</td>';
     echo '<td><a href="nieuws_upd.php?id=' . $row["id"] . '"><i class="fas fa-pencil-alt" style="color:black; font-size:16px"></i></a></td>';
     echo '<td><a href="nieuws_del.php?id=' . $row["id"] . '"><i class="fas fa-trash-alt" style="color:black; font-size:16px"></i></a></td>';
     echo '</tr>';
@@ -71,8 +64,6 @@ while ($row = $stmt->fetch()) {
     //echo printFooter();
     $conn = null;
 ?>
-
-    <div><a class="btn btn-primary" type="button" href="nieuws_add.php" style="margin: 30px 200px;">Toevoegen bericht</a></div>
 
 <?php
 require_once("footer.php");
